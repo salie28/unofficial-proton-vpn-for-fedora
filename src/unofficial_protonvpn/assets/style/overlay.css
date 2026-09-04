@@ -1,0 +1,540 @@
+/*
+ * Our stylesheet. Loaded at GTK_STYLE_PROVIDER_PRIORITY_USER (800), on top of
+ * Proton's main.css which loads at PRIORITY_APPLICATION (600). Theirs is never
+ * edited; ours simply outranks it (PLAN.md §3).
+ *
+ * Colours and sizes below are taken from the Proton VPN Windows client's own
+ * theme (Colors.xaml / Typography.xaml), so this reads as the same product
+ * rather than an approximation of it. Their accent is violet (#6D4AFF) and
+ * their window ground is near-black (#16141C) - the palette we wanted anyway.
+ */
+
+@define-color background_norm #16141C;
+@define-color background_weak #292733;
+@define-color background_strong #3F3B4C;
+
+@define-color text_norm #FFFFFF;
+@define-color text_weak alpha(#FFFFFF, 0.70);
+@define-color text_hint alpha(#FFFFFF, 0.50);
+
+@define-color interaction_norm #6D4AFF;
+@define-color interaction_norm_hover #7C5CFF;
+@define-color interaction_norm_active #8A6EFF;
+@define-color interaction_weak #4A4658;
+@define-color interaction_weak_danger_hover #995B70;
+@define-color interaction_weak_danger_active #A4667A;
+@define-color interaction_default alpha(#FFFFFF, 0.05);
+@define-color interaction_default_hover alpha(#FFFFFF, 0.10);
+@define-color interaction_default_active alpha(#FFFFFF, 0.20);
+
+@define-color vpn_green #2CFFCC;
+@define-color signal_danger #F7607B;
+@define-color signal_success #4BB99D;
+
+@define-color border_norm alpha(#FFFFFF, 0.20);
+@define-color border_weak alpha(#FFFFFF, 0.10);
+
+@define-color map_norm #3E3A4A;
+@define-color map_highlight #676278;
+
+/* --- three-column shell ------------------------------------------------ */
+
+/* The window itself, and their containers inside it. Anything we do not paint
+   falls back to the GTK theme's own grey, which shows up as a thick border
+   around the content. */
+window,
+window.background,
+#main-window,
+#main-widget,
+#main-layout,
+#content-layout,
+#vpn-widget {
+  background-color: @background_norm;
+  border: none;
+  box-shadow: none;
+}
+
+/* The ground everything else sits on. */
+.unofficial-layout {
+  background-color: @background_norm;
+}
+
+/* The country chooser is a panel in its own right, as in the Windows app:
+   lighter than the window behind it, with a slightly lighter border again, and
+   rounded like their PaneContentControl (radius 8, 1px border). */
+.sidebar {
+  background-color: @background_weak;
+  border: 1px solid alpha(#FFFFFF, 0.09);
+  border-radius: 10px;
+  /* Aligned with what is beside it: the top edge meets the top of the map,
+     and the bottom edge meets the chart's baseline (the chart sits 4px above
+     the window edge), so the two columns share a base line. */
+  margin: 0 4px 17px 8px;
+}
+
+.sidebar-nav,
+.sidebar-filters {
+  padding: 0;
+}
+
+.sidebar-nav-button {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.9em;
+}
+
+.sidebar-nav-button:checked {
+  background-color: rgba(255, 255, 255, 0.10);
+  font-weight: 600;
+}
+
+/* Filter tabs read as underlined text, as in the Windows app - not buttons. */
+.sidebar-filter-button {
+  font-size: 14px;
+  padding: 4px 0 6px 0;
+  margin: 0 8px 0 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  background-image: none;
+  box-shadow: none;
+  font-size: 0.92em;
+  opacity: 0.55;
+  border-bottom: 2px solid transparent;
+}
+
+.sidebar-filter-button:hover {
+  background: none;
+  opacity: 0.85;
+}
+
+.sidebar-filter-button:checked {
+  opacity: 1.0;
+  font-weight: 600;
+  /* Their 16x3 pill, centred under the label. Painted as a background rather
+     than a border: transparent side borders would add 24px to every tab and
+     push the whole column wider. */
+  background-image: linear-gradient(to bottom, @text_norm, @text_norm);
+  background-size: 16px 3px;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+}
+
+/* The connection panel carries its own ground: it sits outside the gradient
+   Proton paints on their main widget. */
+.connection-panel {
+  background-color: @background_norm;
+}
+
+/* --- bottom stats bar --------------------------------------------------- */
+
+/* Transparent: the stats read through onto the map, exactly as they do in
+   the Windows app. The fade below supplies the legibility. */
+.stats-bar {
+  background-color: transparent;
+  border: none;
+}
+
+/* Their ReverseGradientFading, ~264px tall, behind the status line + stats. */
+.connection-details {
+  background-image: linear-gradient(to bottom,
+                                    alpha(@background_norm, 0.0) 0%,
+                                    alpha(@background_norm, 0.72) 38%,
+                                    alpha(@background_norm, 0.94) 100%);
+  padding: 44px 20px 14px 20px;
+  border: none;
+}
+
+.connection-status-line {
+  margin: 0 4px 2px 4px;
+}
+
+.stats-caption {
+  font-size: 12px;
+  color: @text_weak;
+}
+
+.stats-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: @text_norm;
+}
+
+/* --- recents ------------------------------------------------------------ */
+
+.recents-row-title {
+  font-weight: 600;
+}
+
+.recents-row-subtitle {
+  font-size: 0.85em;
+  opacity: 0.6;
+}
+
+.recents-empty {
+  opacity: 0.5;
+}
+
+/* --- action rail -------------------------------------------------------- */
+
+.action-rail {
+  background-color: @background_norm;
+  padding: 4px;
+}
+
+/* Floating card over the map. GTK4 has no acrylic blur, so a translucent
+   panel with a soft border is the closest honest equivalent to theirs. */
+.action-rail-floating {
+  background-color: alpha(#292733, 0.82);
+  border: 1px solid alpha(#FFFFFF, 0.07);
+  border-radius: 12px;
+  padding: 8px 4px;
+}
+
+.action-rail-button {
+  padding: 8px 4px;
+  border-radius: 10px;
+}
+
+.action-rail-button:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.action-rail-caption {
+  font-size: 0.68em;
+  opacity: 0.75;
+}
+
+/* --- paid-plan notice --------------------------------------------------- */
+
+.tier-notice {
+  background-color: rgba(255, 196, 0, 0.10);
+  border: 1px solid rgba(255, 196, 0, 0.28);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.tier-notice-label {
+  font-size: 0.9em;
+}
+
+/* --- free-account gate (covers the window until acknowledged) ----------- */
+
+.free-gate {
+  background-color: @background_norm;
+}
+
+.free-gate-icon {
+  color: #e8b93c;
+}
+
+.free-gate-title {
+  font-size: 1.55em;
+  font-weight: 700;
+}
+
+.free-gate-body {
+  font-size: 1.05em;
+}
+
+.free-gate-detail {
+  font-size: 0.95em;
+  opacity: 0.72;
+}
+
+.free-gate-button {
+  padding: 10px 28px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* --- action rail state -------------------------------------------------- */
+
+.action-rail-state {
+  font-size: 0.64em;
+  opacity: 0.6;
+}
+
+.action-rail-active .action-rail-state {
+  color: #7dd5a0;
+  opacity: 0.95;
+}
+
+/* --- traffic graph ------------------------------------------------------ */
+
+.traffic-graph {
+  margin-top: 2px;
+}
+
+/* --- stats: figures block and live rates -------------------------------- */
+
+.stats-figures {
+  margin-right: 4px;
+}
+
+.stats-rate {
+  font-size: 0.82em;
+  font-weight: 600;
+}
+
+.stats-rate { font-size: 12px; font-weight: 600; }
+.stats-rate-down { color: @signal_success; }
+.stats-rate-up   { color: @signal_danger; }
+
+/* --- connection block --------------------------------------------------- */
+/* Sizes from the Windows client: Title 28/36 SemiBold for the country name,
+   BodyMediumStrong 16/20 SemiBold for the server line, 8px under the title,
+   16px above the button. */
+
+.connection-country {
+  font-size: 28px;
+  font-weight: 600;
+  color: @text_norm;
+}
+
+.connection-server {
+  font-size: 16px;
+  font-weight: 600;
+  color: @text_weak;
+}
+
+/* Their Connect is the violet accent; Disconnect is a neutral secondary that
+   only turns red on hover - it is deliberately not red at rest. */
+.connection-button {
+  min-width: 180px;
+  padding: 8px 24px 10px 24px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.connection-button.connect,
+.connection-button.connect:focus {
+  background-image: none;
+  background-color: @interaction_norm;
+  color: #FFFFFF;
+  border: none;
+}
+
+.connection-button.connect:hover {
+  background-color: @interaction_norm_hover;
+}
+
+.connection-button.connect:active {
+  background-color: @interaction_norm_active;
+}
+
+.connection-button.disconnect,
+.connection-button.disconnect:focus {
+  background-image: none;
+  background-color: @interaction_weak;
+  color: @text_norm;
+  border: none;
+}
+
+.connection-button.disconnect:hover {
+  background-color: @interaction_weak_danger_hover;
+}
+
+.connection-button.disconnect:active {
+  background-color: @interaction_weak_danger_active;
+}
+
+.connection-status {
+  font-size: 14px;
+  color: @text_weak;
+  margin-top: 4px;
+}
+
+.connection-status-protected {
+  color: @vpn_green;
+}
+
+.connection-status-unprotected {
+  color: @signal_danger;
+}
+
+/* --- protocol picker ---------------------------------------------------- */
+
+.protocol-menu {
+  padding: 4px;
+  min-width: 150px;
+}
+
+.protocol-menu-item {
+  padding: 7px 12px;
+  border-radius: 7px;
+}
+
+.protocol-menu-item-current {
+  background-color: rgba(255, 255, 255, 0.10);
+  font-weight: 600;
+}
+
+/* --- fastest country ---------------------------------------------------- */
+
+.fastest-row {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background-color: @interaction_default;
+}
+
+.fastest-row:hover {
+  background-color: @interaction_default_hover;
+}
+
+.fastest-row-label {
+  font-size: 16px;
+  color: @text_norm;
+}
+
+.fastest-row-icon {
+  color: @vpn_green;
+}
+
+/* --- list scrollbar ----------------------------------------------------- */
+/* Always visible and thick enough to grab, like the Windows list. */
+
+.sidebar scrollbar {
+  background-color: transparent;
+  border: none;
+  min-width: 12px;
+}
+
+.sidebar scrollbar slider {
+  min-width: 8px;
+  min-height: 32px;
+  margin: 2px;
+  border-radius: 6px;
+  background-color: alpha(#FFFFFF, 0.22);
+}
+
+.sidebar scrollbar slider:hover {
+  background-color: alpha(#FFFFFF, 0.34);
+}
+
+.sidebar scrollbar slider:active {
+  background-color: alpha(#FFFFFF, 0.45);
+}
+
+/* --- animation ----------------------------------------------------------- */
+/*
+ * GTK4 animates CSS properties, so most of this is transitions on the states
+ * that already exist. Kept short: 120-200ms reads as responsive, anything
+ * longer feels laggy on a control you click repeatedly.
+ */
+
+.connection-button,
+.action-rail-button,
+.sidebar-nav-button,
+.sidebar-filter-button,
+.fastest-row,
+.protocol-menu-item,
+.recents-connect {
+  transition: background-color 150ms ease-out,
+              color 150ms ease-out,
+              border-color 150ms ease-out,
+              opacity 150ms ease-out;
+}
+
+/* The filter tab's pill grows in rather than snapping. */
+.sidebar-filter-button {
+  transition: background-size 160ms ease-out,
+              opacity 150ms ease-out,
+              font-weight 150ms ease-out;
+  background-size: 0 3px;
+}
+
+.sidebar-filter-button:checked {
+  background-size: 16px 3px;
+}
+
+/* Protected/unprotected is a state change worth seeing. */
+.connection-status,
+.connection-country,
+.connection-server {
+  transition: color 220ms ease-out, opacity 220ms ease-out;
+}
+
+/* The rail's On/Off text and its active tint. */
+.action-rail-state {
+  transition: color 180ms ease-out, opacity 180ms ease-out;
+}
+
+/* Panels settle rather than pop when they appear. */
+.tier-notice,
+.free-gate,
+.connection-details {
+  transition: opacity 200ms ease-out;
+}
+
+/* Rows in the country list and recents. */
+.recents-row,
+.fastest-row {
+  transition: background-color 140ms ease-out;
+}
+
+/* The scrollbar thickens on hover instead of jumping. */
+.sidebar scrollbar slider {
+  transition: background-color 140ms ease-out, min-width 140ms ease-out;
+}
+
+/* The connection block crossfades between states. */
+.connection-block {
+  transition: opacity 260ms ease-out;
+}
+
+.connection-block-changing {
+  opacity: 0.25;
+  transition: opacity 60ms ease-in;
+}
+
+/* --- connecting pulse ---------------------------------------------------- */
+/*
+ * While a connection is being established, the block breathes. GTK4 supports
+ * CSS keyframes, so this needs no timer of our own. Kept subtle - a VPN client
+ * that flashes at you is exhausting.
+ */
+
+@keyframes connecting-pulse {
+  0%   { opacity: 1.0; }
+  50%  { opacity: 0.55; }
+  100% { opacity: 1.0; }
+}
+
+.connection-block-connecting .connection-country,
+.connection-block-connecting .connection-server,
+.connection-block-connecting .connection-status {
+  animation: connecting-pulse 1.4s ease-in-out infinite;
+}
+
+/* --- entrances ----------------------------------------------------------- */
+/*
+ * Rows and panels fade in rather than appearing fully formed. Kept to opacity:
+ * GTK4 CSS has no transforms, so slides have to come from Gtk.Stack (the
+ * sidebar pages use SLIDE_LEFT_RIGHT) rather than from here.
+ */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.recents-row,
+.recents-empty {
+  animation: fade-in 220ms ease-out;
+}
+
+.free-gate {
+  animation: fade-in 260ms ease-out;
+}
+
+.tier-notice {
+  animation: fade-in 220ms ease-out;
+}
+
+/* The popover menus GTK animates itself; just soften their contents. */
+.protocol-menu-item {
+  animation: fade-in 160ms ease-out;
+}
