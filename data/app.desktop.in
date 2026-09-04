@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=@APP_NAME@
+GenericName=VPN Client
+Comment=@APP_SUMMARY@
+Exec=env PYTHONPATH=@SRC_DIR@ /usr/bin/python3 -sP -m unofficial_protonvpn
+Icon=@APP_ID@
+Terminal=false
+Categories=Network;Security;
+Keywords=proton;vpn;protonvpn;
+StartupNotify=true
+StartupWMClass=@APP_ID@

@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: A problem with the VPN itself
+    url: https://proton.me/support/contact
+    about: >
+      Tunnel, encryption, leaks, kill switch, credentials or account problems
+      belong to Proton. This project does not implement any of that; it calls
+      into their installed backend.
+  - name: A security vulnerability
+    url: https://github.com/salie28/unofficial-proton-vpn-for-fedora/security/advisories/new
+    about: Report privately rather than in a public issue. See SECURITY.md.

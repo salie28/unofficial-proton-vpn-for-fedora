@@ -1,0 +1,14 @@
+# Proton's upstream source, kept locally as a read-only reference ONLY.
+# Never vendored into this repo (see PLAN.md §2: "Never vendor Proton's code").
+/reference/
+
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Working notes, kept locally rather than published. PLAN.md is the original
+# spec and docs/TESTING.md is a manual checklist: useful while building, noise
+# for anyone cloning the project.
+/PLAN.md
+/docs/TESTING.md

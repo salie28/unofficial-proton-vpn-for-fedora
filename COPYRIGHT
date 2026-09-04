@@ -1,0 +1,19 @@
+Unofficial Proton VPN
+Copyright (C) 2026 salie28
+
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version. See LICENSE for the full text.
+
+This program is NOT affiliated with, endorsed by, or produced by Proton AG.
+
+It imports and composes the officially installed `proton.vpn.app.gtk` package
+at runtime. That code is Copyright (c) Proton AG and licensed GPL-3.0; none of
+it is copied into this repository, and none of Proton's installed files are
+modified. Proton's name and logos are their trademarks and are not licensed by
+the GPL.
+
+Country outlines in src/unofficial_protonvpn/widgets/map_data.py are derived
+from Natural Earth (naturalearthdata.com), which places its data in the public
+domain.
