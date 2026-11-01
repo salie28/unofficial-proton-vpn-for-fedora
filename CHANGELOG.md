@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.0.1
+
+Checked against Proton VPN 4.18.8 (Fedora 44, November 2026). No changes to
+the app were needed; v1.0.0 runs on it as is.
+
+### Fixed
+
+- A layout test asserted on a private list inside Proton's `VPNWidget` that
+  4.18.8 removed. The behaviour it stood for, Proton's status widgets still
+  receiving every connection state, is unchanged; the test now checks that
+  through the widget's signal instead, so it holds on both versions.
+
 ## v1.0.0
 
 First release.

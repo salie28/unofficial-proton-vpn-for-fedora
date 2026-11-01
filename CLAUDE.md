@@ -117,6 +117,20 @@ children into three columns, so `load()`, `display()`, `status_update()` and
   framing all of a country's territory put the camera in the Atlantic.
 - **`Gtk.Popover.popup()` on a widget with no toplevel segfaults** (not an
   exception - the process dies). `_show_menu` checks `button.get_root()` first.
+- **Proton 4.18.8 ships two stylesheet sets behind the `FreeRescope` feature
+  flag** (read from `~/.cache/Proton/VPN/features.json` at launch). Flag off:
+  `_primitives_legacy.css` + `main.css`. Flag on: `_primitives.css` (599),
+  `main.css` (600), `_dark_palette.css` (601). Both stay under our 800.
+  `tools/render.py` always renders the flag-on set, so if the real app ever
+  looks different from a render, check which set it loaded.
+- **Running the tests appends to Proton's `~/.cache/Proton/VPN/logs/vpn-app.log`**
+  (their logging config is set up on import). The deliberate failures in the
+  error-path tests show up there as ERROR lines. When reading the log for real
+  problems, ignore entries timestamped at a test run.
+- **Test upstream behaviour, not upstream internals.** 4.18.8 removed
+  `VPNWidget._state_subscribers`, which one test asserted on, while the
+  behaviour it stood for (their status widgets still get every state) was
+  unchanged. `test_layout` now drives the `connection-state-changed` signal.
 - Screenshots are **not** available (GNOME Wayland returns AccessDenied). Use
   `tools/render.py`. Ask the user for a screenshot when the real window matters.
   Faint horizontal banding in rendered PNGs is a Cairo tiling artifact of the

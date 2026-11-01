@@ -84,12 +84,27 @@ class LayoutTest(unittest.TestCase):
         """Their status widgets are replaced on screen, not discarded.
 
         VPNWidget keeps pushing connection states into them, so they must still
-        exist - they are simply not shown (see connection_panel.py).
+        exist - they are simply not shown (see connection_panel.py). Checked
+        through the signal rather than VPNWidget's internals: 4.18.1 kept a
+        `_state_subscribers` list, 4.18.8 calls each widget directly, and the
+        status widget's method was renamed along the way.
         """
-        for name in ("connection_status_widget", "quick_connect_widget"):
-            widget = getattr(self.widget, name)
-            self.assertIsNotNone(widget)
-            self.assertIn(widget, self.widget._state_subscribers)
+        from proton.vpn.connection import states
+
+        received = []
+        status = self.widget.connection_status_widget
+        quick = self.widget.quick_connect_widget
+        for widget, method in ((status, "connection_status_update"),
+                               (status, "update_status"),
+                               (quick, "connection_status_update")):
+            if hasattr(widget, method):
+                setattr(widget, method,
+                        lambda state, w=widget: received.append(w))
+
+        self.widget.emit("connection-state-changed", states.Disconnected())
+
+        self.assertIn(status, received, "status widget no longer gets states")
+        self.assertIn(quick, received, "quick connect no longer gets states")
 
     def test_three_column_shape(self):
         """Sidebar, connection panel and rail sit side by side in one row."""
